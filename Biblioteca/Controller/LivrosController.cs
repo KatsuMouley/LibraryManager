@@ -1,7 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using API.Data;
-using API.Models;
+using Biblioteca.Data;
+using Biblioteca.Modelos;
 
 [ApiController]
 [Route("api/[controller]")]
