@@ -21,7 +21,12 @@ builder.Services.AddDbContext<AppDataContext>
     (options => options.UseMySql(connectionString, 
     ServerVersion.AutoDetect(connectionString)));
 builder.Services.
+    AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.
     AddScoped<ILivroRepository, LivroRepository>();
+builder.Services.
+    AddScoped<IEmprestimoRepository, EmprestimoRepository>();
+
 
 
 var chaveJwt = builder.Configuration["JwtSettings:SecretKey"];

@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Biblioteca.Data;
 using Biblioteca.Modelos;
@@ -7,51 +7,56 @@ using Biblioteca.Modelos;
 [Route("api/[controller]")]
 public class LivrosController : ControllerBase
 {
-    private static List<Livro> livros = new List<Livro>
+    private readonly ILivroRepository _livroRepository;
+
+    public LivrosController(ILivroRepository livroRepository)
     {
-        new Livro { Id = 1, Titulo = "Dom Casmurro", Autor = "Machado de Assis", AnoPublicacao = 1899 },
-        new Livro { Id = 2, Titulo = "O Pequeno Príncipe", Autor = "Antoine de Saint-Exupéry", AnoPublicacao = 1943 }
-    };
+        _livroRepository = livroRepository;
+    }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Livro>> GetLivros() => livros;
+    public ActionResult<IEnumerable<Livro>> GetLivros()
+    {
+        var livros = _livroRepository.Listar();
+        return Ok(livros);
+    }
 
     [HttpGet("{id}")]
     public ActionResult<Livro> GetLivro(int id)
     {
-        var livro = livros.FirstOrDefault(l => l.Id == id);
-        if (livro == null) return NotFound();
-        return livro;
+        var livro = _livroRepository.BuscarPorId(id);
+        if (livro == null) return NotFound("Livro não encontrado.");
+        return Ok(livro);
     }
 
     [HttpPost]
     public ActionResult<Livro> PostLivro(Livro livro)
     {
-        livro.Id = livros.Max(l => l.Id) + 1;
-        livros.Add(livro);
+        _livroRepository.Cadastrar(livro);
         return CreatedAtAction(nameof(GetLivro), new { id = livro.Id }, livro);
     }
 
     [HttpPut("{id}")]
     public IActionResult PutLivro(int id, Livro livro)
     {
-        var livroExistente = livros.FirstOrDefault(l => l.Id == id);
-        if (livroExistente == null) return NotFound();
+        var livroExistente = _livroRepository.BuscarPorId(id);
+        if (livroExistente == null) return NotFound("Livro não encontrado.");
 
         livroExistente.Titulo = livro.Titulo;
         livroExistente.Autor = livro.Autor;
         livroExistente.AnoPublicacao = livro.AnoPublicacao;
 
+        _livroRepository.Atualizar(livroExistente);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public IActionResult DeleteLivro(int id)
     {
-        var livro = livros.FirstOrDefault(l => l.Id == id);
-        if (livro == null) return NotFound();
+        var livro = _livroRepository.BuscarPorId(id);
+        if (livro == null) return NotFound("Livro não encontrado.");
 
-        livros.Remove(livro);
+        _livroRepository.Remover(id);
         return NoContent();
     }
 }

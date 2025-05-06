@@ -1,11 +1,12 @@
-using System;
 using Biblioteca.Modelos;
 
-namespace Biblioteca.Data;
-
-public interface IUsuarioRepository
+namespace Biblioteca.Data
 {
-    void Cadastrar(Usuario usuario);
-    List<Usuario> Listar();
-    Usuario? BuscarUsuarioPorEmailSenha(string email, string senha);
+    public interface IUsuarioRepository
+    {
+        void Cadastrar(Usuario usuario);
+        List<Usuario> Listar();
+        Usuario? BuscarUsuarioPorEmailSenha(string email, string senha);
+        bool Existe(int id);
+    }
 }

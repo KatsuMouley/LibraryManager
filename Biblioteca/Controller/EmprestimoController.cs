@@ -1,37 +1,73 @@
 using Microsoft.AspNetCore.Mvc;
+using Biblioteca.Data;
 using Biblioteca.Modelos;
 
-namespace Biblioteca.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class EmprestimosController : ControllerBase
+namespace Biblioteca.Controllers
 {
-    private static List<Emprestimo> emprestimos = new();
-    private static int idAtual = 1;
-
-    [HttpGet]
-    public ActionResult<IEnumerable<Emprestimo>> GetTodos() => emprestimos;
-
-    [HttpPost]
-    public IActionResult RealizarEmprestimo([FromBody] Emprestimo novoEmprestimo)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class EmprestimosController : ControllerBase
     {
-        if (emprestimos.Any(e => e.LivroId == novoEmprestimo.LivroId && e.DataDevolucao == null))
-            return BadRequest("Livro já emprestado.");
+        private readonly IEmprestimoRepository _emprestimoRepository;
+        private readonly ILivroRepository _livroRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        novoEmprestimo.Id = idAtual++;
-        emprestimos.Add(novoEmprestimo);
-        return CreatedAtAction(nameof(GetTodos), new { id = novoEmprestimo.Id }, novoEmprestimo);
-    }
+        public EmprestimosController(
+            IEmprestimoRepository emprestimoRepository,
+            ILivroRepository livroRepository,
+            IUsuarioRepository usuarioRepository)
+        {
+            _emprestimoRepository = emprestimoRepository;
+            _livroRepository = livroRepository;
+            _usuarioRepository = usuarioRepository;
+        }
 
-    [HttpPost("devolver/{id}")]
-    public IActionResult DevolverLivro(int id)
-    {
-        var emprestimo = emprestimos.FirstOrDefault(e => e.Id == id);
-        if (emprestimo == null || emprestimo.DataDevolucao != null)
-            return NotFound("Empréstimo não encontrado ou já devolvido.");
+        [HttpPost("cadastrar")]
+        public IActionResult Cadastrar([FromBody] Emprestimo emprestimo)
+        {
+            if (!_livroRepository.Existe(emprestimo.LivroId))
+                return BadRequest("Livro não encontrado.");
 
-        emprestimo.DataDevolucao = DateTime.Now;
-        return Ok(emprestimo);
+            if (!_usuarioRepository.Existe(emprestimo.UsuarioId))
+                return BadRequest("Usuário não encontrado.");
+
+            if (_emprestimoRepository.LivroEstaEmprestado(emprestimo.LivroId))
+                return BadRequest("Livro já está emprestado.");
+
+            emprestimo.DataEmprestimo = DateTime.Now;
+            emprestimo.DataDevolucao = null;
+
+            _emprestimoRepository.Cadastrar(emprestimo);
+            return Created("", emprestimo);
+        }
+
+        [HttpPut("devolver/{id}")]
+        public IActionResult Devolver(int id)
+        {
+            var emprestimo = _emprestimoRepository.BuscarPorId(id);
+            if (emprestimo == null)
+                return NotFound("Empréstimo não encontrado.");
+
+            if (emprestimo.DataDevolucao != null)
+                return BadRequest("Este empréstimo já foi devolvido.");
+
+            _emprestimoRepository.Devolver(id);
+            return Ok("Livro devolvido com sucesso.");
+        }
+
+        [HttpGet("listar")]
+        public IActionResult Listar()
+        {
+            return Ok(_emprestimoRepository.Listar());
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult BuscarPorId(int id)
+        {
+            var emprestimo = _emprestimoRepository.BuscarPorId(id);
+            if (emprestimo == null)
+                return NotFound("Empréstimo não encontrado.");
+            return Ok(emprestimo);
+        }
     }
 }
