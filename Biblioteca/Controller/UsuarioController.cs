@@ -1,7 +1,10 @@
-using Biblioteca.Data;
-using Biblioteca.Modelos;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Biblioteca.Modelos;
+using Biblioteca.Data;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Biblioteca.Controller
 {
@@ -9,7 +12,7 @@ namespace Biblioteca.Controller
     [ApiController]
     public class UsuarioController : ControllerBase
     {
-         private readonly IUsuarioRepository _usuarioRepository;
+    private readonly IUsuarioRepository _usuarioRepository;
     private readonly IConfiguration _configuration;
     public UsuarioController(IUsuarioRepository usuarioRepository, IConfiguration configuration)
     {
