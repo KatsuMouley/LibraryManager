@@ -12,12 +12,12 @@ public class LivroRepository : ILivroRepository
     }
     public void Cadastrar(Livro livro)
     {
-        _context.livros.Add(livro);
+        _context.Livros.Add(livro);
         _context.SaveChanges();
     }
 
     public List<Livro> Listar()
     {
-       return _context.livros.ToList();
+       return _context.Livros.ToList();
     }
 }

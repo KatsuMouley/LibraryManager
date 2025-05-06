@@ -37,8 +37,8 @@ namespace Biblioteca.Controller
             return Unauthorized(new { mensagem = "Usuário ou senha inválidos!"});
         }
             
-
-        string token = GerarToken(usuarioExistente);
+        // parte da implementação do Jwt
+        // string token = GerarToken(usuarioExistente);
         return Ok(usuarioExistente);
     }
 
@@ -48,18 +48,18 @@ namespace Biblioteca.Controller
         return Ok(_usuarioRepository.Listar());
     }
 
-    public string GerarToken(Usuario usuario)
-    {
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.Name, usuario.Email),
-            new Claim(ClaimTypes.Role, usuario.Permissao.ToString())
-        };
-
-        var chave = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
-        var assinatura = new SigningCredentials(new SymmetricSecurityKey(chave), SecurityAlgorithms.HmacSha256);
-        var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddSeconds(30), signingCredentials: assinatura);
-        return new JwtSecurityTokenHandler().WriteToken(token);
-    }
+    // public string GerarToken(Usuario usuario)
+    // {
+    //     var claims = new[]
+    //     {
+    //         new Claim(ClaimTypes.Name, usuario.Email),
+    //         new Claim(ClaimTypes.Role, usuario.Permissao.ToString())
+    //     };
+    //     //Ainda não há chave Jwt
+    //     var chave = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]);
+    //     var assinatura = new SigningCredentials(new SymmetricSecurityKey(chave), SecurityAlgorithms.HmacSha256);
+    //     var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddSeconds(30), signingCredentials: assinatura);
+    //     return new JwtSecurityTokenHandler().WriteToken(token);
+    // }
     }
 }
