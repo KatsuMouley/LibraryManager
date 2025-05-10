@@ -11,8 +11,17 @@ namespace Biblioteca.Data
             _context = context;
         }
 
+        public bool UsuarioAtingiuLimiteEmprestimos(int usuarioId, int limite = 3)
+    {
+        return _context.Emprestimos.Count(e => e.UsuarioId == usuarioId && e.DataDevolucao == null) >= limite;
+    }
+
+
         public void Cadastrar(Emprestimo emprestimo)
         {
+             if (UsuarioAtingiuLimiteEmprestimos(emprestimo.UsuarioId))
+            throw new Exception("Usuário atingiu o limite de empréstimos.");
+
             _context.Emprestimos.Add(emprestimo);
             _context.SaveChanges();
         }
