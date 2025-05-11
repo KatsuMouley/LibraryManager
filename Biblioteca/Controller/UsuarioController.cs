@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace Biblioteca.Controllers
 {
@@ -21,34 +23,33 @@ namespace Biblioteca.Controllers
             _configuration = configuration;
         }
 
+        
         [HttpPost("cadastrar")]
         public IActionResult Cadastrar([FromBody] Usuario usuario)
         {
+            usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
             _usuarioRepository.Cadastrar(usuario);
-            return Created("", usuario);
+            return Ok(usuario);
         }
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] Usuario usuario)
         {
-            Usuario? usuarioExistente = _usuarioRepository.BuscarUsuarioPorEmailSenha(usuario.Email, usuario.Senha);
-
-            if (usuarioExistente == null)
+            var usuarioExistente = _usuarioRepository.BuscarUsuarioPorEmail(usuario.Email);
+            if (usuarioExistente == null || !BCrypt.Net.BCrypt.Verify(usuario.Senha, usuarioExistente.Senha))
                 return Unauthorized(new { mensagem = "Usuário ou senha inválidos!" });
 
             string token = GerarToken(usuarioExistente);
 
             return Ok(new
             {
-                token = token,
-                usuario = new
-                {
-                    id = usuarioExistente.Id,
-                    email = usuarioExistente.Email
-                }
+                token,
+                usuario = new { usuarioExistente.Id, usuarioExistente.Email, usuarioExistente.Permissao }
             });
         }
 
+
+        [Authorize(Roles = "administrador")]
         [HttpGet("listar")]
         public IActionResult Listar()
         {

@@ -22,7 +22,7 @@ namespace Biblioteca.Data
         public void Cadastrar(Usuario usuario)
         {
             _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
+            _context.SaveChanges(); // Síncrono
         }
 
         public List<Usuario> Listar()
@@ -33,6 +33,22 @@ namespace Biblioteca.Data
         public bool Existe(int id)
         {
             return _context.Usuarios.Any(u => u.Id == id);
+        }
+
+        public Usuario BuscarPorId(int id)
+        {
+            return _context.Usuarios.Find(id)!;
+        }
+
+        public Usuario? BuscarUsuarioPorEmail(string email)
+        {
+            return _context.Usuarios.FirstOrDefault(u => u.Email == email);
+        }
+
+        public void Atualizar(Usuario usuario)
+        {
+            _context.Usuarios.Update(usuario);
+            _context.SaveChanges(); // Síncrono
         }
     }
 }

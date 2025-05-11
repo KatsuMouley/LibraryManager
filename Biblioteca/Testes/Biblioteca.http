@@ -1,6 +1,111 @@
 @Biblioteca_HostAddress = http://localhost:5257
+@JWT_TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiYWRtaW5pc3RyYWRvciIsImV4cCI6MTc0NzAwMDM3OX0.AaJT-ZtrC8SSgo8V9aNjQPfTk953_wXfqUuJBGlVnIc
+### USUÁRIOS
 
-GET {{Biblioteca_HostAddress}}/weatherforecast/
-Accept: application/json
+# Cadastrar novo usuário (senha será hasheada no backend)
+POST {{Biblioteca_HostAddress}}/api/Usuario/cadastrar
+Content-Type: application/json
+
+{
+  "email": "adm@example.com",
+  "senha": "123456",
+  "permissao": 1
+}
 
 ###
+
+# Login de usuário (retorna token JWT)
+POST {{Biblioteca_HostAddress}}/api/Usuario/login
+Content-Type: application/json
+
+{
+  "email": "adm@example.com",
+  "senha": "123456"
+}
+
+###
+
+# Listar todos os usuários (requer token de admin)
+GET {{Biblioteca_HostAddress}}/api/Usuario/listar
+Authorization: Bearer {{JWT_TOKEN}}
+
+### LIVROS
+
+# Cadastrar livro (requer token)
+POST {{Biblioteca_HostAddress}}/api/Livros
+Content-Type: application/json
+Authorization: Bearer {{JWT_TOKEN}}
+
+{
+  "titulo": "O Senhor dos Anéis",
+  "autor": "J.R.R. Tolkien",
+  "anoPublicacao": 1954
+}
+
+###
+
+# Listar todos os livros
+GET {{Biblioteca_HostAddress}}/api/Livros/listar
+Content-Type: application/json
+Authorization: Bearer {{JWT_TOKEN}}
+
+###
+
+# Buscar livro por ID
+GET {{Biblioteca_HostAddress}}/api/Livros/1
+Content-Type: application/json
+Authorization: Bearer {{JWT_TOKEN}}
+
+###
+
+# Atualizar livro (requer token)
+PUT {{Biblioteca_HostAddress}}/api/Livros/3
+Content-Type: application/json
+Authorization: Bearer {{JWT_TOKEN}}
+
+{
+  "titulo": "O Hobbit",
+  "autor": "J.R.R. Tolkien",
+  "anoPublicacao": 1937
+}
+
+# Não Retorna uma resposta mas altera o item no banco de dados
+###
+
+# Deletar livro (requer token)
+DELETE {{Biblioteca_HostAddress}}/api/Livros/2
+Authorization: Bearer {{JWT_TOKEN}}
+
+
+# Também não retorna uma mensagem de confirmação mas deleta o item do banco de dados
+### EMPRÉSTIMOS
+
+# Cadastrar novo empréstimo (requer token)
+POST {{Biblioteca_HostAddress}}/api/Emprestimos/cadastrar
+Content-Type: application/json
+Authorization: Bearer {{JWT_TOKEN}}
+
+{
+  "livroid": 1,
+  "usuarioid": 1,
+  "dataEmprestimo": "2025-05-11T00:00:00",
+  "dataDevolucaoPrevista": "2025-05-18T00:00:00"
+}
+
+###
+# Devolver livro (requer token)
+# Método alterado para PUT conforme imagem. Se for sem corpo, o backend deve estar preparado.
+PUT {{Biblioteca_HostAddress}}/api/Emprestimos/devolver/1
+Authorization: Bearer {{JWT_TOKEN}}
+
+###
+
+# Listar todos os empréstimos (requer token admin ou bibliotecário)
+GET {{Biblioteca_HostAddress}}/api/Emprestimos/listar
+Authorization: Bearer {{JWT_TOKEN}}
+
+###
+
+# Obter empréstimo por ID (requer token)
+GET {{Biblioteca_HostAddress}}/api/Emprestimos/1
+Authorization: Bearer {{JWT_TOKEN}}

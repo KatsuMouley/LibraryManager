@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Biblioteca.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20250506204840_Inicial")]
-    partial class Inicial
+    [Migration("20250511204942_inicial")]
+    partial class inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,38 @@ namespace Biblioteca.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("Biblioteca.Modelos.Emprestimo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("DataDevolucao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DataDevolucaoPrevista")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DataEmprestimo")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("LivroId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Emprestimos");
+                });
 
             modelBuilder.Entity("Biblioteca.Modelos.Livro", b =>
                 {
@@ -45,7 +77,7 @@ namespace Biblioteca.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("livros");
+                    b.ToTable("Livros");
                 });
 
             modelBuilder.Entity("Biblioteca.Modelos.Usuario", b =>
@@ -62,6 +94,9 @@ namespace Biblioteca.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<bool>("Penalizado")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("Permissao")
                         .HasColumnType("int");

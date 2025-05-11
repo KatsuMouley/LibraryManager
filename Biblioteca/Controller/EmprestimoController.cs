@@ -24,25 +24,34 @@ namespace Biblioteca.Controllers
             _usuarioRepository = usuarioRepository;
         }
 
+        [Authorize(Roles = "usuario, administrador")]
         [HttpPost("cadastrar")]
         public IActionResult Cadastrar([FromBody] Emprestimo emprestimo)
         {
             if (!_livroRepository.Existe(emprestimo.LivroId))
                 return BadRequest("Livro não encontrado.");
 
-            if (!_usuarioRepository.Existe(emprestimo.UsuarioId))
+            var usuario = _usuarioRepository.BuscarPorId(emprestimo.UsuarioId);
+            if (usuario == null)
                 return BadRequest("Usuário não encontrado.");
+
+            if (usuario.Penalizado)
+                return BadRequest("Usuário penalizado. Não pode realizar empréstimos.");
 
             if (_emprestimoRepository.LivroEstaEmprestado(emprestimo.LivroId))
                 return BadRequest("Livro já está emprestado.");
 
+            var emprestimosAtivos = _emprestimoRepository.ContarEmprestimosAtivos(usuario.Id);
+            if (emprestimosAtivos >= 5)
+                return BadRequest("Limite de empréstimos atingido.");
+
             emprestimo.DataEmprestimo = DateTime.Now;
-            emprestimo.DataDevolucao = null;
+            emprestimo.DataDevolucaoPrevista = DateTime.Now.AddDays(7);
 
             _emprestimoRepository.Cadastrar(emprestimo);
-            return Created("", emprestimo);
+            return CreatedAtAction(nameof(BuscarPorId), new { id = emprestimo.Id }, emprestimo);
         }
-
+        
         [HttpPut("devolver/{id}")]
         public IActionResult Devolver(int id)
         {
@@ -53,7 +62,16 @@ namespace Biblioteca.Controllers
             if (emprestimo.DataDevolucao != null)
                 return BadRequest("Este empréstimo já foi devolvido.");
 
-            _emprestimoRepository.Devolver(id);
+            emprestimo.DataDevolucao = DateTime.Now;
+
+            if (emprestimo.DataDevolucao > emprestimo.DataDevolucaoPrevista)
+            {
+                var usuario = _usuarioRepository.BuscarPorId(emprestimo.UsuarioId);
+                usuario.Penalizado = true;
+                _usuarioRepository.Atualizar(usuario);
+            }
+
+            _emprestimoRepository.Atualizar(emprestimo);
             return Ok("Livro devolvido com sucesso.");
         }
 

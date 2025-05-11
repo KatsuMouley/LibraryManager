@@ -9,5 +9,7 @@ namespace Biblioteca.Data
         List<Emprestimo> Listar();
         Emprestimo? BuscarPorId(int id);
         bool LivroEstaEmprestado(int livroId);
+        int ContarEmprestimosAtivos(int usuarioId);
+        void Atualizar(Emprestimo emprestimo);
     }
 }

@@ -17,7 +17,7 @@ namespace Biblioteca.Controllers
             _livroRepository = livroRepository;
         }
 
-        [HttpGet]
+        [HttpGet("listar")]
         public ActionResult<IEnumerable<Livro>> GetLivros()
         {
             var livros = _livroRepository.Listar();
@@ -32,6 +32,7 @@ namespace Biblioteca.Controllers
             return Ok(livro);
         }
 
+        [Authorize(Roles = "administrador,bibliotecario")]
         [HttpPost]
         public ActionResult<Livro> PostLivro(Livro livro)
         {

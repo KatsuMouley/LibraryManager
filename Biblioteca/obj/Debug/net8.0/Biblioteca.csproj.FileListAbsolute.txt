@@ -358,3 +358,4 @@ C:\Users\loeps\Desktop\nhack\LibraryManager\Biblioteca\obj\Debug\net8.0\refint\B
 C:\Users\loeps\Desktop\nhack\LibraryManager\Biblioteca\obj\Debug\net8.0\Biblioteca.pdb
 C:\Users\loeps\Desktop\nhack\LibraryManager\Biblioteca\obj\Debug\net8.0\Biblioteca.genruntimeconfig.cache
 C:\Users\loeps\Desktop\nhack\LibraryManager\Biblioteca\obj\Debug\net8.0\ref\Biblioteca.dll
+E:\_MyDocuments\CSharpness\LibraryManager\Biblioteca\bin\Debug\net8.0\BCrypt.Net-Next.dll
