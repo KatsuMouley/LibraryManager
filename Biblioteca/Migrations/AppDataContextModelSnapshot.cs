@@ -22,6 +22,26 @@ namespace Biblioteca.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("Biblioteca.Modelos.Autor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nacionalidade")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Autores");
+                });
+
             modelBuilder.Entity("Biblioteca.Modelos.Emprestimo", b =>
                 {
                     b.Property<int>("Id")
@@ -65,14 +85,16 @@ namespace Biblioteca.Migrations
                     b.Property<int>("AnoPublicacao")
                         .HasColumnType("int");
 
-                    b.Property<string>("Autor")
-                        .HasColumnType("longtext");
+                    b.Property<int>("AutorId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AutorId");
 
                     b.ToTable("Livros");
                 });
@@ -105,6 +127,22 @@ namespace Biblioteca.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("Biblioteca.Modelos.Livro", b =>
+                {
+                    b.HasOne("Biblioteca.Modelos.Autor", "Autor")
+                        .WithMany("Livros")
+                        .HasForeignKey("AutorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Autor");
+                });
+
+            modelBuilder.Entity("Biblioteca.Modelos.Autor", b =>
+                {
+                    b.Navigation("Livros");
                 });
 #pragma warning restore 612, 618
         }

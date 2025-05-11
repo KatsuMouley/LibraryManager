@@ -26,6 +26,8 @@ builder.Services.
     AddScoped<ILivroRepository, LivroRepository>();
 builder.Services.
     AddScoped<IEmprestimoRepository, EmprestimoRepository>();
+builder.Services.
+    AddScoped<IAutorRepository, AutorRepository>();
 
 
 

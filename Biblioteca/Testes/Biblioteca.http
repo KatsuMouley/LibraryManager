@@ -1,5 +1,6 @@
 @Biblioteca_HostAddress = http://localhost:5257
-@JWT_TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiYWRtaW5pc3RyYWRvciIsImV4cCI6MTc0NzAwMDM3OX0.AaJT-ZtrC8SSgo8V9aNjQPfTk953_wXfqUuJBGlVnIc
+@JWT_TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiYWRtaW5pc3RyYWRvciIsImV4cCI6MTc0NzAwMzU5N30.SIBheCF1A2rE-6oj1c8qFxdGTsGMMxqJsI2bv8fzti0
+
 ### USUÁRIOS
 
 # Cadastrar novo usuário (senha será hasheada no backend)
@@ -38,8 +39,8 @@ Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "titulo": "O Senhor dos Anéis",
-  "autor": "J.R.R. Tolkien",
-  "anoPublicacao": 1954
+  "anoPublicacao": 1954,
+  "autorId": 1 // ID do autor cadastrado
 }
 
 ###
@@ -65,8 +66,8 @@ Authorization: Bearer {{JWT_TOKEN}}
 
 {
   "titulo": "O Hobbit",
-  "autor": "J.R.R. Tolkien",
-  "anoPublicacao": 1937
+  "anoPublicacao": 1937,
+  "autorId": 1 // ID do autor cadastrado
 }
 
 # Não Retorna uma resposta mas altera o item no banco de dados
@@ -108,4 +109,46 @@ Authorization: Bearer {{JWT_TOKEN}}
 
 # Obter empréstimo por ID (requer token)
 GET {{Biblioteca_HostAddress}}/api/Emprestimos/1
+Authorization: Bearer {{JWT_TOKEN}}
+
+
+
+### Autores
+
+#Listar todos os Autores
+GET {{Biblioteca_HostAddress}}/api/Autor/listar
+Authorization: Bearer {{JWT_TOKEN}}
+
+### Cadastrar Autor
+POST {{Biblioteca_HostAddress}}/api/Autor
+Content-Type: application/json
+Authorization: Bearer {{JWT_TOKEN}}
+
+{
+  "nome": "José de Alencar",
+  "nacionalidade": "Brasileiro"
+}
+
+### Alterar Autor
+
+###  
+PUT {{Biblioteca_HostAddress}}/api/Autor/alterar/2
+Content-Type: application/json
+Authorization: Bearer {{JWT_TOKEN}}
+
+{
+  "id": 2,
+  "nome": "José Martiniano de Alencar",
+  "nacionalidade": "Cearense, Brasileiro"
+}
+
+### Deletar
+
+DELETE {{Biblioteca_HostAddress}}/api/Autor/deletar/2
+Authorization: Bearer {{JWT_TOKEN}}
+
+### --------------------------------------------------------------------
+
+### Buscar Por ID
+GET {{Biblioteca_HostAddress}}/api/Autor/2
 Authorization: Bearer {{JWT_TOKEN}}
