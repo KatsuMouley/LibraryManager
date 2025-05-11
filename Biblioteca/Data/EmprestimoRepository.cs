@@ -17,24 +17,41 @@ namespace Biblioteca.Data
     }
 
 
-        public void Cadastrar(Emprestimo emprestimo)
-        {
-             if (UsuarioAtingiuLimiteEmprestimos(emprestimo.UsuarioId))
-            throw new Exception("Usuário atingiu o limite de empréstimos.");
+       public void Cadastrar(Emprestimo emprestimo)
+{
+    var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == emprestimo.UsuarioId);
+    if (usuario != null && usuario.Penalizado)
+        throw new Exception("Usuário penalizado, não pode pegar livros emprestados.");
 
-            _context.Emprestimos.Add(emprestimo);
-            _context.SaveChanges();
-        }
+    if (UsuarioAtingiuLimiteEmprestimos(emprestimo.UsuarioId))
+        throw new Exception("Usuário atingiu o limite de empréstimos.");
+
+    _context.Emprestimos.Add(emprestimo);
+    _context.SaveChanges();
+}
+
 
         public void Devolver(int id)
+{
+    var emprestimo = _context.Emprestimos.FirstOrDefault(e => e.Id == id && e.DataDevolucao == null);
+    if (emprestimo != null)
+    {
+        emprestimo.DataDevolucao = DateTime.Now;
+
+        var diasEmprestado = (emprestimo.DataDevolucao.Value - emprestimo.DataEmprestimo).TotalDays;
+        if (diasEmprestado > 7)
         {
-            var emprestimo = _context.Emprestimos.FirstOrDefault(e => e.Id == id && e.DataDevolucao == null);
-            if (emprestimo != null)
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == emprestimo.UsuarioId);
+            if (usuario != null)
             {
-                emprestimo.DataDevolucao = DateTime.Now;
-                _context.SaveChanges();
+                usuario.Penalizado = true;
             }
         }
+
+        _context.SaveChanges();
+    }
+}
+
 
         public List<Emprestimo> Listar()
         {

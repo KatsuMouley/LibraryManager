@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\LibraryManager\\Biblioteca\\Biblioteca.csproj": {}
+    "C:\\Users\\loeps\\Desktop\\nhack\\LibraryManager\\Biblioteca\\Biblioteca.csproj": {}
   },
   "projects": {
-    "C:\\LibraryManager\\Biblioteca\\Biblioteca.csproj": {
+    "C:\\Users\\loeps\\Desktop\\nhack\\LibraryManager\\Biblioteca\\Biblioteca.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\LibraryManager\\Biblioteca\\Biblioteca.csproj",
+        "projectUniqueName": "C:\\Users\\loeps\\Desktop\\nhack\\LibraryManager\\Biblioteca\\Biblioteca.csproj",
         "projectName": "Biblioteca",
-        "projectPath": "C:\\LibraryManager\\Biblioteca\\Biblioteca.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\LibraryManager\\Biblioteca\\obj\\",
+        "projectPath": "C:\\Users\\loeps\\Desktop\\nhack\\LibraryManager\\Biblioteca\\Biblioteca.csproj",
+        "packagesPath": "C:\\Users\\loeps\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\loeps\\Desktop\\nhack\\LibraryManager\\Biblioteca\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\loeps\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -81,7 +81,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.408/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

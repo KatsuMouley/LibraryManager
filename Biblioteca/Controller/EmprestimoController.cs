@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Biblioteca.Data;
 using Biblioteca.Modelos;
 
 namespace Biblioteca.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class EmprestimosController : ControllerBase

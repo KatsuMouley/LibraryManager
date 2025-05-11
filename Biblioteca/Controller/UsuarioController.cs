@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Biblioteca.Controller
+namespace Biblioteca.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,6 +14,7 @@ namespace Biblioteca.Controller
     {
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IConfiguration _configuration;
+
         public UsuarioController(IUsuarioRepository usuarioRepository, IConfiguration configuration)
         {
             _usuarioRepository = usuarioRepository;
@@ -27,30 +28,13 @@ namespace Biblioteca.Controller
             return Created("", usuario);
         }
 
-        // [HttpPost("login")]
-        // public IActionResult Login([FromBody] Usuario usuario)
-        // {
-        //     Usuario? usuarioExistente = _usuarioRepository
-        //         .BuscarUsuarioPorEmailSenha(usuario.Email, usuario.Senha);
-        //     if(usuarioExistente == null)
-        //     {
-        //         return Unauthorized(new { mensagem = "Usuário ou senha inválidos!"});
-        //     }
-
-        //     // parte da implementação do Jwt
-        //     // string token = GerarToken(usuarioExistente);
-        //     return Ok(usuarioExistente);
-        // }
         [HttpPost("login")]
         public IActionResult Login([FromBody] Usuario usuario)
         {
-            Usuario? usuarioExistente = _usuarioRepository
-                .BuscarUsuarioPorEmailSenha(usuario.Email, usuario.Senha);
+            Usuario? usuarioExistente = _usuarioRepository.BuscarUsuarioPorEmailSenha(usuario.Email, usuario.Senha);
 
             if (usuarioExistente == null)
-            {
                 return Unauthorized(new { mensagem = "Usuário ou senha inválidos!" });
-            }
 
             string token = GerarToken(usuarioExistente);
 
@@ -65,24 +49,25 @@ namespace Biblioteca.Controller
             });
         }
 
-
         [HttpGet("listar")]
         public IActionResult Listar()
         {
             return Ok(_usuarioRepository.Listar());
         }
+
         [ApiExplorerSettings(IgnoreApi = true)]
         public string GerarToken(Usuario usuario)
         {
             var claims = new[]
             {
-            new Claim(ClaimTypes.Name, usuario.Email),
-            new Claim(ClaimTypes.Role, usuario.Permissao.ToString())
-        };
-            //Ainda não há chave Jwt
+                new Claim(ClaimTypes.Name, usuario.Email),
+                new Claim(ClaimTypes.Role, usuario.Permissao.ToString())
+            };
+
             var chave = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]!);
             var assinatura = new SigningCredentials(new SymmetricSecurityKey(chave), SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddSeconds(30), signingCredentials: assinatura);
+            var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddHours(1), signingCredentials: assinatura);
+
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
