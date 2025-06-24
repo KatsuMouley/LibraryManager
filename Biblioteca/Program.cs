@@ -33,6 +33,7 @@ builder.Services.
 
 var chaveJwt = builder.Configuration["JwtSettings:SecretKey"];
 
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -50,6 +51,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontCorsPolicy", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:3000")    // URL do seu Next.js
+            .AllowAnyHeader()                         // permite Authorization, Content-Type, etc.
+            .AllowAnyMethod()                         // GET, POST, PUT, DELETE…
+            .AllowCredentials();                      // se precisar enviar cookies ou auth
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -60,6 +74,7 @@ if (app.Environment.IsDevelopment())
 }
 
 //Ordem estava inversa
+app.UseCors("FrontCorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 

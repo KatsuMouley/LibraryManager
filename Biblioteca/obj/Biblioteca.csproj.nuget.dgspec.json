@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\_MyDocuments\\CSharpness\\LibraryManager\\Biblioteca\\Biblioteca.csproj": {}
+    "E:\\_MyDocuments\\Códigos\\LibraryManager\\Biblioteca\\Biblioteca.csproj": {}
   },
   "projects": {
-    "E:\\_MyDocuments\\CSharpness\\LibraryManager\\Biblioteca\\Biblioteca.csproj": {
+    "E:\\_MyDocuments\\Códigos\\LibraryManager\\Biblioteca\\Biblioteca.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\_MyDocuments\\CSharpness\\LibraryManager\\Biblioteca\\Biblioteca.csproj",
+        "projectUniqueName": "E:\\_MyDocuments\\Códigos\\LibraryManager\\Biblioteca\\Biblioteca.csproj",
         "projectName": "Biblioteca",
-        "projectPath": "E:\\_MyDocuments\\CSharpness\\LibraryManager\\Biblioteca\\Biblioteca.csproj",
+        "projectPath": "E:\\_MyDocuments\\Códigos\\LibraryManager\\Biblioteca\\Biblioteca.csproj",
         "packagesPath": "C:\\Users\\Pichau\\.nuget\\packages\\",
-        "outputPath": "E:\\_MyDocuments\\CSharpness\\LibraryManager\\Biblioteca\\obj\\",
+        "outputPath": "E:\\_MyDocuments\\Códigos\\LibraryManager\\Biblioteca\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
