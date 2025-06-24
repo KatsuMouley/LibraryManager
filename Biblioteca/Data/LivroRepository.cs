@@ -53,5 +53,11 @@ namespace Biblioteca.Data
             // Apenas exemplo – depende do seu modelo de empréstimo
             return _context.Emprestimos.Any(e => e.LivroId == livroId && e.DataDevolucao == null);
         }
+
+        public IEnumerable<Livro> BuscarPorAutor(int autorId)
+        {
+            return _context.Livros.Where(l => l.AutorId == autorId).ToList();
+        }
+
     }
 }

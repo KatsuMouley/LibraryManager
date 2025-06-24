@@ -1,19 +1,17 @@
-// services/api.ts
+//services/api.ts
 import axios from 'axios';
 import { getToken } from '@/utils/auth';
 
-const API = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL, 
+const api = axios.create({
+  baseURL: 'http://localhost:5257/api',
 });
 
-console.log('>>> API baseURL =', API.defaults.baseURL);
-
-API.interceptors.request.use(config => {
+api.interceptors.request.use(config => {
   const token = getToken();
-  console.log('enviando token:', token);
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
-
-export default API;
+export default api;

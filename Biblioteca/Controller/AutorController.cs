@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 namespace Biblioteca.Controllers
 {
-    [Authorize] // Proteja o controller
     [ApiController]
     [Route("api/[controller]")]
     public class AutorController : ControllerBase
@@ -19,55 +18,67 @@ namespace Biblioteca.Controllers
             _autorRepository = autorRepository;
         }
 
+        // Acesso público ao acervo de autores
         [HttpGet("listar")]
-        public ActionResult<IEnumerable<Autor>> GetAutores()
+        [AllowAnonymous]
+        public ActionResult<IEnumerable<Autor>> Listar()
         {
-            return Ok(_autorRepository.Listar());
+            var autores = _autorRepository.Listar();
+            return Ok(autores);
         }
 
+        // Detalhe de autor por ID (requer login)
         [HttpGet("{id}")]
-        public ActionResult<Autor> GetAutor(int id)
+        public ActionResult<Autor> BuscarPorId(int id)
         {
             var autor = _autorRepository.BuscarPorId(id);
-            if (autor == null) return NotFound("Autor não encontrado.");
+            if (autor == null)
+                return NotFound("Autor não encontrado.");
             return Ok(autor);
         }
 
+        // Cadastrar novo autor (apenas administrador)
         [HttpPost]
-        [Authorize(Roles = "administrador")] // Restrinja quem pode cadastrar
-        public ActionResult<Autor> PostAutor(Autor autor)
+        [Authorize(Roles = "administrador")]
+        public ActionResult<Autor> Cadastrar(Autor autor)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             _autorRepository.Cadastrar(autor);
-            // Retorna o autor criado e o link para acessá-lo
-            return CreatedAtAction(nameof(GetAutor), new { id = autor.Id }, autor);
+            return CreatedAtAction(nameof(BuscarPorId), new { id = autor.Id }, autor);
         }
 
+        // Atualizar autor por ID (apenas administrador)
         [HttpPut("alterar/{id}")]
-        [Authorize(Roles = "administrador")] // Restrinja quem pode atualizar
-        public IActionResult PutAutor(int id, Autor autor)
+        [Authorize(Roles = "administrador")]
+        public IActionResult Atualizar(int id, Autor autor)
         {
-            if (id != autor.Id) return BadRequest("ID do autor na URL não corresponde ao ID no corpo da requisição.");
+            if (id != autor.Id)
+                return BadRequest("ID inconsistente.");
 
-            var autorExistente = _autorRepository.BuscarPorId(id);
-            if (autorExistente == null) return NotFound("Autor não encontrado para atualização.");
+            var existente = _autorRepository.BuscarPorId(id);
+            if (existente == null)
+                return NotFound("Autor não encontrado.");
 
-            autorExistente.Nome = autor.Nome;
-            autorExistente.Nacionalidade = autor.Nacionalidade;
-            // Atualize outros campos se houver
+            existente.Nome = autor.Nome;
+            existente.Nacionalidade = autor.Nacionalidade;
 
-            _autorRepository.Atualizar(autorExistente);
-            return NoContent(); // Sucesso, sem conteúdo para retornar
+            _autorRepository.Atualizar(existente);
+            return NoContent();
         }
 
+        // Remover autor por ID (apenas administrador)
         [HttpDelete("deletar/{id}")]
-        [Authorize(Roles = "administrador")] // Apenas admin pode deletar, por exemplo
-        public IActionResult DeleteAutor(int id)
+        [Authorize(Roles = "administrador")]
+        public IActionResult Deletar(int id)
         {
             var autor = _autorRepository.BuscarPorId(id);
-            if (autor == null) return NotFound("Autor não encontrado para exclusão.");
+            if (autor == null)
+                return NotFound("Autor não encontrado.");
 
             _autorRepository.Remover(id);
-            return NoContent(); // Sucesso, sem conteúdo para retornar
+            return NoContent();
         }
     }
 }

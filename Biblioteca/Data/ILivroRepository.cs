@@ -11,5 +11,7 @@ namespace Biblioteca.Data
         void Remover(int id); // novo
         bool Existe(int id);
         bool LivroEstaEmprestado(int livroId);
+        IEnumerable<Livro> BuscarPorAutor(int autorId);
+
     }
 }

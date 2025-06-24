@@ -67,7 +67,7 @@ namespace Biblioteca.Controllers
 
             var chave = Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"]!);
             var assinatura = new SigningCredentials(new SymmetricSecurityKey(chave), SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddHours(1), signingCredentials: assinatura);
+            var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddHours(20), signingCredentials: assinatura);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

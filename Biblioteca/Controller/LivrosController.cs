@@ -5,7 +5,6 @@ using Biblioteca.Modelos;
 
 namespace Biblioteca.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class LivrosController : ControllerBase
@@ -17,6 +16,9 @@ namespace Biblioteca.Controllers
             _livroRepository = livroRepository;
         }
 
+        // ─── ROTAS PÚBLICAS (qualquer um pode ver) ─────────────────────────────────
+
+        [AllowAnonymous]
         [HttpGet("listar")]
         public ActionResult<IEnumerable<Livro>> GetLivros()
         {
@@ -24,15 +26,20 @@ namespace Biblioteca.Controllers
             return Ok(livros);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public ActionResult<Livro> GetLivro(int id)
         {
             var livro = _livroRepository.BuscarPorId(id);
-            if (livro == null) return NotFound("Livro não encontrado.");
+            if (livro == null) 
+                return NotFound("Livro não encontrado.");
             return Ok(livro);
         }
 
-        [Authorize(Roles = "administrador,bibliotecario")]
+        // ─── ROTAS PROTEGIDAS (escrita) ───────────────────────────────────────────────
+
+        // Criar livro: só bibliotecários ou administradores
+        [Authorize(Roles = "bibliotecario,administrador")]
         [HttpPost]
         public ActionResult<Livro> PostLivro(Livro livro)
         {
@@ -40,11 +47,14 @@ namespace Biblioteca.Controllers
             return CreatedAtAction(nameof(GetLivro), new { id = livro.Id }, livro);
         }
 
+        // Atualizar livro: só bibliotecários ou administradores
+        [Authorize(Roles = "bibliotecario,administrador")]
         [HttpPut("{id}")]
         public IActionResult PutLivro(int id, Livro livro)
         {
             var livroExistente = _livroRepository.BuscarPorId(id);
-            if (livroExistente == null) return NotFound("Livro não encontrado.");
+            if (livroExistente == null) 
+                return NotFound("Livro não encontrado.");
 
             livroExistente.Titulo = livro.Titulo;
             livroExistente.Autor = livro.Autor;
@@ -54,14 +64,28 @@ namespace Biblioteca.Controllers
             return NoContent();
         }
 
+        // Deletar livro: só bibliotecários ou administradores
+        [Authorize(Roles = "bibliotecario,administrador")]
         [HttpDelete("{id}")]
         public IActionResult DeleteLivro(int id)
         {
             var livro = _livroRepository.BuscarPorId(id);
-            if (livro == null) return NotFound("Livro não encontrado.");
+            if (livro == null) 
+                return NotFound("Livro não encontrado.");
 
             _livroRepository.Remover(id);
             return NoContent();
         }
+
+        [HttpGet("autor/{autorId}")]
+        [AllowAnonymous] // se quiser que seja acessível sem login
+        public ActionResult<IEnumerable<Livro>> BuscarPorAutor(int autorId)
+        {
+            var livros = _livroRepository.BuscarPorAutor(autorId);
+            if (!livros.Any())
+                return NotFound("Nenhum livro encontrado para este autor.");
+            return Ok(livros);
+        }
+
     }
 }

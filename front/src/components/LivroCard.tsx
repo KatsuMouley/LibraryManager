@@ -1,7 +1,10 @@
 import { Livro } from '@/types/interfaces';
 import Link from 'next/link';
 
-interface Props { livro: Livro; onDelete: (id: number) => void; }
+interface Props {
+  livro: Livro;
+  onDelete?: (id: number) => void;  // Agora opcional
+}
 
 export default function LivroCard({ livro, onDelete }: Props) {
   return (
@@ -11,8 +14,17 @@ export default function LivroCard({ livro, onDelete }: Props) {
         <p>Ano: {livro.anoPublicacao}</p>
       </div>
       <div className="flex gap-2">
-        <Link href={`/livros/${livro.id}`} className="text-blue-600">Editar</Link>
-        <button onClick={() => onDelete(livro.id)} className="text-red-600">Excluir</button>
+        <Link href={`/livros/${livro.id}`} className="text-blue-600">
+          Editar
+        </Link>
+        {onDelete && (
+          <button
+            onClick={() => onDelete(livro.id)}
+            className="text-red-600"
+          >
+            Excluir
+          </button>
+        )}
       </div>
     </div>
   );

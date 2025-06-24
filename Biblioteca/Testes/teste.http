@@ -1,0 +1,150 @@
+@host = http://localhost:5257
+@token = SEU_TOKEN_AQUI
+
+###########################################################
+### 🔓 ROTAS PÚBLICAS (não requerem autenticação)
+###########################################################
+
+### ✅ Cadastrar novo usuário
+POST {{host}}/api/Usuario/cadastrar
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "senha": "123456",
+  "permissao": 1
+}
+
+###
+
+### ✅ Login (retorna token JWT)
+POST {{host}}/api/Usuario/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "senha": "123456"
+}
+
+###
+
+### ✅ Listar livros (acesso público)
+GET {{host}}/api/Livros/listar
+
+###
+
+### ✅ Buscar livro por ID
+GET {{host}}/api/Livros/1
+
+###
+
+### ✅ Buscar livros por autor
+GET {{host}}/api/Livros/autor/1
+
+###
+
+### ✅ Listar autores
+GET {{host}}/api/Autor/listar
+
+###
+
+### ✅ Buscar autor por ID
+GET {{host}}/api/Autor/1
+
+###########################################################
+### 🔐 ROTAS PROTEGIDAS (requerem autenticação)
+###########################################################
+
+### 🔒 Listar todos os usuários (somente admin)
+GET {{host}}/api/Usuario/listar
+Authorization: Bearer {{token}}
+
+###
+
+### 🔒 Cadastrar novo livro
+POST {{host}}/api/Livros
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "titulo": "1984",
+  "anoPublicacao": 1949,
+  "autorId": 1
+}
+
+###
+
+### 🔒 Atualizar livro
+PUT {{host}}/api/Livros/2
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": 2,
+  "titulo": "1984 (Edição Revisada)",
+  "anoPublicacao": 1950,
+  "autorId": 1
+}
+
+###
+
+### 🔒 Deletar livro
+DELETE {{host}}/api/Livros/1
+Authorization: Bearer {{token}}
+
+###
+
+### 🔒 Cadastrar autor
+POST {{host}}/api/Autor
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nome": "George Orwell",
+  "nacionalidade": "Britânico"
+}
+
+###
+
+### 🔒 Atualizar autor
+PUT {{host}}/api/Autor/alterar/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nome": "Eric Arthur Blair",
+  "nacionalidade": "Britânico"
+}
+
+###
+
+### 🔒 Deletar autor
+DELETE {{host}}/api/Autor/deletar/1
+Authorization: Bearer {{token}}
+
+###
+
+### 🔒 Listar empréstimos
+GET {{host}}/api/Emprestimos/listar
+Authorization: Bearer {{token}}
+
+###
+
+### 🔒 Criar empréstimo
+POST {{host}}/api/Emprestimos/cadastrar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "livroid": 1,
+  "usuarioid": 1,
+  "dataEmprestimo": "2025-06-24T00:00:00",
+  "dataDevolucaoPrevista": "2025-07-01T00:00:00"
+}
+
+###
+
+### 🔒 Devolver livro
+PUT {{host}}/api/Emprestimos/devolver/1
+Authorization: Bearer {{token}}

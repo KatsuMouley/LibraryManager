@@ -361,9 +361,6 @@ C:\Users\loeps\Desktop\nhack\LibraryManager\Biblioteca\obj\Debug\net8.0\ref\Bibl
 E:\_MyDocuments\CSharpness\LibraryManager\Biblioteca\bin\Debug\net8.0\BCrypt.Net-Next.dll
 E:\_MyDocuments\Códigos\LibraryManager\Biblioteca\bin\Debug\net8.0\appsettings.Development.json
 E:\_MyDocuments\Códigos\LibraryManager\Biblioteca\bin\Debug\net8.0\appsettings.json
-E:\_MyDocuments\Códigos\LibraryManager\Biblioteca\bin\Debug\net8.0\front\package-lock.json
-E:\_MyDocuments\Códigos\LibraryManager\Biblioteca\bin\Debug\net8.0\front\package.json
-E:\_MyDocuments\Códigos\LibraryManager\Biblioteca\bin\Debug\net8.0\front\tsconfig.json
 E:\_MyDocuments\Códigos\LibraryManager\Biblioteca\bin\Debug\net8.0\Biblioteca.staticwebassets.endpoints.json
 E:\_MyDocuments\Códigos\LibraryManager\Biblioteca\bin\Debug\net8.0\Biblioteca.exe
 E:\_MyDocuments\Códigos\LibraryManager\Biblioteca\bin\Debug\net8.0\Biblioteca.deps.json

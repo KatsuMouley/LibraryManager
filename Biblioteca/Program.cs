@@ -52,17 +52,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy("FrontCorsPolicy", policy =>
+//     {
+//         policy
+//             .WithOrigins("http://localhost:3000")    // URL do seu Next.js
+//             .AllowAnyHeader()                         // permite Authorization, Content-Type, etc.
+//             .AllowAnyMethod()                         // GET, POST, PUT, DELETE…
+//             .AllowCredentials();                      // se precisar enviar cookies ou auth
+//     });
+// });
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("FrontCorsPolicy", policy =>
+    options.AddPolicy("DevCors", policy =>
     {
         policy
-            .WithOrigins("http://localhost:3000")    // URL do seu Next.js
-            .AllowAnyHeader()                         // permite Authorization, Content-Type, etc.
-            .AllowAnyMethod()                         // GET, POST, PUT, DELETE…
-            .AllowCredentials();                      // se precisar enviar cookies ou auth
+            .AllowAnyOrigin() // <--- cuidado com isso
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
+
 
 var app = builder.Build();
 
@@ -74,7 +86,7 @@ if (app.Environment.IsDevelopment())
 }
 
 //Ordem estava inversa
-app.UseCors("FrontCorsPolicy");
+app.UseCors("DevCors");
 app.UseAuthentication();
 app.UseAuthorization();
 
