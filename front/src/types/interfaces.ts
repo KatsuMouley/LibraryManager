@@ -1,8 +1,12 @@
+// src/types/interfaces.ts
+
 export interface Livro {
   id: number;
   titulo: string;
   anoPublicacao: number;
   autorId: number;
+  // <<<<<<< CORRIGIDO: Adicionada a propriedade capaUrl >>>>>>>>>
+  capaUrl?: string; // Capa do livro (URL opcional)
 }
 
 export interface Autor {
@@ -19,13 +23,10 @@ export interface Usuario {
 
 export interface Emprestimo {
   id: number;
-  // <<<<<<< CORRIGIDO: camelCase para corresponder ao payload da API >>>>>>>>>
   livroId: number;
   usuarioId: number;
   dataEmprestimo: string;
-  // CORRIGIDO: O nome da propriedade é 'dataDevolucao'
   dataDevolucao: string | null;
   dataDevolucaoPrevista: string;
-  // Adicione a propriedade 'status' que também aparece no JSON da API
   status?: string;
 }

@@ -1,0 +1,203 @@
+@host = http://localhost:5257
+@token_admin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibm92by5hZG1pbkBleGFtcGxlLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6ImFkbWluaXN0cmFkb3IiLCJleHAiOjE3NTA5NDg4NDV9.hjPNdQn5WOknSVnxEZdEVQHfEebPZUG2vUWtvo4zqfE
+
+
+# ==========================================================
+# || PASSO 1: CADASTRAR ALGUNS AUTORES                    ||
+# ||          (Execute estas requisições primeiro)        ||
+# ==========================================================
+
+### 🔒 Cadastrar Autor: George Orwell (ID: 1, se for a primeira entrada)
+POST {{host}}/api/Autor
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "nome": "George Orwell",
+  "nacionalidade": "Britânico"
+}
+
+### 🔒 Cadastrar Autor: J.R.R. Tolkien (ID: 2)
+POST {{host}}/api/Autor
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "nome": "J.R.R. Tolkien",
+  "nacionalidade": "Britânico"
+}
+
+### 🔒 Cadastrar Autor: Ray Bradbury (ID: 3)
+POST {{host}}/api/Autor
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "nome": "Ray Bradbury",
+  "nacionalidade": "Americano"
+}
+
+### 🔒 Cadastrar Autor: Aldous Huxley (ID: 4)
+POST {{host}}/api/Autor
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "nome": "Aldous Huxley",
+  "nacionalidade": "Britânico"
+}
+
+### 🔒 Cadastrar Autor: Frank Herbert (ID: 5)
+POST {{host}}/api/Autor
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "nome": "Frank Herbert",
+  "nacionalidade": "Americano"
+}
+
+### 🔒 Cadastrar Autor: Yuval Noah Harari (ID: 6)
+POST {{host}}/api/Autor
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "nome": "Yuval Noah Harari",
+  "nacionalidade": "Israelense"
+}
+
+# ==========================================================
+# || PASSO 2: CADASTRAR 10 LIVROS COM CAPAS               ||
+# ||          (Use os IDs dos autores que você criou)     ||
+# ==========================================================
+
+### 🔒 Cadastrar Livro 1: 1984
+# autorId: 1 (George Orwell)
+POST {{host}}/api/Livros
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "titulo": "1984",
+  "anoPublicacao": 1949,
+  "autorId": 1,
+  "capaUrl": "https://i.ibb.co/gbg8scNr/livro-capa-dura.jpg"
+}
+
+### 🔒 Cadastrar Livro 2: A Revolução dos Bichos
+# autorId: 1 (George Orwell)
+POST {{host}}/api/Livros
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "titulo": "A Revolução dos Bichos",
+  "anoPublicacao": 1945,
+  "autorId": 1,
+  "capaUrl": "https://i.ibb.co/gbg8scNr/livro-capa-dura.jpg"
+}
+
+### 🔒 Cadastrar Livro 3: O Hobbit
+# autorId: 2 (J.R.R. Tolkien)
+POST {{host}}/api/Livros
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "titulo": "O Hobbit",
+  "anoPublicacao": 1937,
+  "autorId": 2,
+  "capaUrl": "https://i.ibb.co/gbg8scNr/livro-capa-dura.jpg"
+}
+
+### 🔒 Cadastrar Livro 4: O Senhor dos Anéis
+# autorId: 2 (J.R.R. Tolkien)
+POST {{host}}/api/Livros
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "titulo": "O Senhor dos Anéis",
+  "anoPublicacao": 1954,
+  "autorId": 2,
+  "capaUrl": "https://i.ibb.co/gbg8scNr/livro-capa-dura.jpg"
+}
+
+### 🔒 Cadastrar Livro 5: Fahrenheit 451
+# autorId: 3 (Ray Bradbury)
+POST {{host}}/api/Livros
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "titulo": "Fahrenheit 451",
+  "anoPublicacao": 1953,
+  "autorId": 3,
+  "capaUrl": "https://i.ibb.co/gbg8scNr/livro-capa-dura.jpg"
+}
+
+### 🔒 Cadastrar Livro 6: Admirável Mundo Novo
+# autorId: 4 (Aldous Huxley)
+POST {{host}}/api/Livros
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "titulo": "Admirável Mundo Novo",
+  "anoPublicacao": 1932,
+  "autorId": 4,
+  "capaUrl": "https://i.ibb.co/gbg8scNr/livro-capa-dura.jpg"
+}
+
+### 🔒 Cadastrar Livro 7: Duna
+# autorId: 5 (Frank Herbert)
+POST {{host}}/api/Livros
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "titulo": "Duna",
+  "anoPublicacao": 1965,
+  "autorId": 5,
+  "capaUrl": "https://i.ibb.co/gbg8scNr/livro-capa-dura.jpg"
+}
+
+### 🔒 Cadastrar Livro 8: O Nome do Vento
+# autorId: 1 (Se você o criou, use um ID existente)
+POST {{host}}/api/Livros
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "titulo": "O Nome do Vento",
+  "anoPublicacao": 2007,
+  "autorId": 1,
+  "capaUrl": "https://i.ibb.co/gbg8scNr/livro-capa-dura.jpg"
+}
+
+### 🔒 Cadastrar Livro 9: O Nome do Vento - A Temor do Sábio
+# autorId: 1 (Se você o criou, use um ID existente)
+POST {{host}}/api/Livros
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "titulo": "O Nome do Vento - A Temor do Sábio",
+  "anoPublicacao": 2011,
+  "autorId": 1,
+  "capaUrl": "https://i.ibb.co/gbg8scNr/livro-capa-dura.jpg"
+}
+
+### 🔒 Cadastrar Livro 10: Sapiens
+# autorId: 6 (Yuval Noah Harari)
+POST {{host}}/api/Livros
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "titulo": "Sapiens",
+  "anoPublicacao": 2011,
+  "autorId": 6,
+  "capaUrl": "https://i.ibb.co/gbg8scNr/livro-capa-dura.jpg"
+}

@@ -1,8 +1,2 @@
-/* styles/globals.css */
 
-/* CSS-First: pré-reset/utilities do Tailwind */
-@import "tailwindcss/preflight";
-
-/* Aqui você pode colocar seus estilos customizados abaixo */
-
-@tailwind utilities;
+@import "tailwindcss";

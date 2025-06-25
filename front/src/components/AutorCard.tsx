@@ -9,18 +9,18 @@ interface Props {
 
 export default function AutorCard({ autor, onDelete }: Props) {
   return (
-    <div className="border p-4 rounded bg-gray-100 flex justify-between items-center shadow-sm">
-      <div>
-        <h2 className="font-bold text-lg">{autor.nome}</h2>
+    <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105 flex flex-col justify-between h-auto">
+      <div className="mb-4">
+        <h2 className="font-bold text-xl text-gray-900">{autor.nome}</h2>
         <p className="text-gray-600">Nacionalidade: {autor.nacionalidade}</p>
       </div>
-      <div className="flex gap-2">
-        <Link href={`/admin/autores/${autor.id}`} className="text-yellow-600 hover:underline">
+      <div className="flex flex-col sm:flex-row gap-2">
+        <Link href={`/admin/autores/${autor.id}`} className="text-yellow-600 font-semibold hover:underline">
           Editar
         </Link>
         <button
           onClick={() => onDelete(autor.id)}
-          className="text-red-600 hover:underline"
+          className="text-red-600 font-semibold hover:underline"
         >
           Excluir
         </button>

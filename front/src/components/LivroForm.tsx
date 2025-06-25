@@ -3,40 +3,35 @@
 import { useState, useEffect } from 'react';
 import { Livro, Autor } from '@/types/interfaces';
 import API from '@/services/api';
-import { useRouter } from 'next/router'; // CORRIGIDO: Use 'next/router' para Pages Router
+import { useRouter } from 'next/router';
 import { useFetch } from '@/hooks/useFetch';
 
 export default function LivroForm() {
-  // Estados para os campos do formulário
   const [titulo, setTitulo] = useState('');
   const [ano, setAno] = useState<number | ''>('');
   const [autorId, setAutorId] = useState<number | ''>('');
+  const [capaUrl, setCapaUrl] = useState(''); // Estado para a URL da capa
 
-  // Estados para feedback visual
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  // Hooks do Next.js
-  const router = useRouter(); // CORRIGIDO: use useRouter
-  const { id } = router.query; // CORRIGIDO: Pegue o ID da query do router
+  const router = useRouter();
+  const { id } = router.query;
 
-  // Hook para buscar a lista de autores para o dropdown
   const { data: autores, loading: loadingAutores, error: errorAutores } = useFetch<Autor[]>('/Autor/listar');
 
-  // Efeito para pré-preencher o formulário no modo de edição
   useEffect(() => {
-    // O `id` é uma string ou undefined.
     if (id) {
       setLoading(true);
       setError('');
-      // Faz a requisição para buscar os dados do livro com o ID
       API.get(`/Livros/${id}`)
         .then(res => {
           const l: Livro = res.data;
           setTitulo(l.titulo);
           setAno(l.anoPublicacao);
           setAutorId(l.autorId);
+          setCapaUrl(l.capaUrl || ''); // Pré-preenche a URL da capa
           setLoading(false);
         })
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -45,26 +40,23 @@ export default function LivroForm() {
           setLoading(false);
         });
     }
-  }, [id]); // O efeito roda sempre que o ID na URL muda
+  }, [id]);
 
-  // Gera um array de anos para o dropdown, de 1900 até o ano atual + 5
   const anoAtual = new Date().getFullYear();
   const anosDisponiveis = Array.from({ length: anoAtual - 1899 + 5 }, (_, i) => 1900 + i).reverse();
 
-  // Função de submissão do formulário
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
 
-    // Validação
     if (!titulo || !ano || !autorId) {
       setError('Por favor, preencha todos os campos obrigatórios.');
       return;
     }
 
     setLoading(true);
-    const payload = { titulo, anoPublicacao: ano, autorId };
+    const payload = { titulo, anoPublicacao: ano, autorId, capaUrl }; // Inclui capaUrl no payload
 
     try {
       if (id) {
@@ -74,7 +66,7 @@ export default function LivroForm() {
         await API.post('/Livros', payload);
         setSuccess('Livro cadastrado com sucesso!');
       }
-      
+
       setTimeout(() => router.push('/explorar'), 1500);
     } catch (err) {
       setError('Falha ao salvar o livro. Verifique os dados e tente novamente.');
@@ -83,25 +75,22 @@ export default function LivroForm() {
       setLoading(false);
     }
   };
-  
-  // Exibe loading ou erro para o dropdown de autores
-  if (loadingAutores) return <div className="p-6 text-center">Carregando autores...</div>;
+
+  if (loadingAutores) return <div className="p-6 text-center text-gray-500">Carregando autores...</div>;
   if (errorAutores) return <div className="p-6 text-center text-red-600">Falha ao carregar a lista de autores.</div>;
   if (!autores || autores.length === 0) return <div className="p-6 text-center text-gray-500">Nenhum autor cadastrado. Por favor, cadastre um autor primeiro.</div>;
 
   return (
-    <div className="p-6 max-w-md mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">{id ? 'Editar' : 'Novo'} Livro</h1>
+    <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-2xl mt-10">
+      <h1 className="text-3xl font-bold mb-6 text-center text-gray-900">{id ? 'Editar' : 'Novo'} Livro</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Exibe mensagens de feedback */}
-        {error && <p className="text-red-600 text-center">{error}</p>}
-        {success && <p className="text-green-600 text-center">{success}</p>}
+        {error && <p className="text-red-600 text-center text-sm">{error}</p>}
+        {success && <p className="text-green-600 text-center text-sm">{success}</p>}
 
-        {/* Campo Título */}
         <label className="block">
-          <span className="text-gray-700">Título</span>
+          <span className="text-gray-700 font-medium">Título</span>
           <input
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring focus:ring-blue-200"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             placeholder="Título"
             value={titulo}
             onChange={e => setTitulo(e.target.value)}
@@ -109,11 +98,10 @@ export default function LivroForm() {
           />
         </label>
 
-        {/* Campo Ano de Publicação (Dropdown de Anos) */}
         <label className="block">
-          <span className="text-gray-700">Ano de Publicação</span>
+          <span className="text-gray-700 font-medium">Ano de Publicação</span>
           <select
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring focus:ring-blue-200 bg-white"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white transition"
             value={ano}
             onChange={e => setAno(Number(e.target.value))}
             required
@@ -125,11 +113,10 @@ export default function LivroForm() {
           </select>
         </label>
 
-        {/* Campo Autor (Dropdown) */}
         <label className="block">
-          <span className="text-gray-700">Autor</span>
+          <span className="text-gray-700 font-medium">Autor</span>
           <select
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring focus:ring-blue-200 bg-white"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white transition"
             value={autorId}
             onChange={e => setAutorId(Number(e.target.value))}
             required
@@ -142,12 +129,22 @@ export default function LivroForm() {
             ))}
           </select>
         </label>
+
+        <label className="block">
+          <span className="text-gray-700 font-medium">URL da Capa (Opcional)</span>
+          <input
+            className="mt-1 block w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            placeholder="Ex: https://exemplo.com/capa.jpg"
+            type="url"
+            value={capaUrl}
+            onChange={e => setCapaUrl(e.target.value)}
+          />
+        </label>
         
-        {/* Botão de Salvar com estado de loading */}
         <button
           type="submit"
           disabled={loading}
-          className={`w-full text-white px-4 py-2 rounded-md transition-colors ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'}`}
+          className={`w-full text-white font-bold py-3 rounded-md transition-colors ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'}`}
         >
           {loading ? 'Salvando...' : 'Salvar'}
         </button>

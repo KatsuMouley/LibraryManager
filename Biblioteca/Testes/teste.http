@@ -1,12 +1,13 @@
 @host = http://localhost:5257
 
 # ==========================================================
-# ||                   VARIÁVEIS DE TOKEN                 ||
-# || Após fazer login com cada tipo de usuário, cole o    ||
-# || token JWT correspondente aqui.                       ||
+# ||                 VARIÁVEIS DE TOKEN                   ||
+# || IMPORTANTE: Após fazer login com cada tipo de        ||
+# || usuário no seu banco de dados, cole o token JWT      ||
+# || correspondente aqui.                                 ||
 # ==========================================================
-@token_comum = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiY29tbW9tdXNlckBleGFtcGxlLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMTUiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c3VhcmlvIiwiZXhwIjoxNzUwODg2Mjk1fQ.cLLhpbpYqJOrWDlCi81HWBCHMhTB9hCfb4oljgGBpHw
-@token_admin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiTU9TQGV4YW1wbGUuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiIxNCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6ImFkbWluaXN0cmFkb3IiLCJleHAiOjE3NTA4ODYzMjN9.MCwV4XqSFpxRmOtTGln08dH87Rd-0yuEf9MWzo88GM0
+@token_comum = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiY29tbW9tdXNlckBleGFtcGxlLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6InVzdWFyaW8iLCJleHAiOjE3NTA5NDg4MjN9.TKiH-bNXrlBaSv3brKThJLx0dP89X1YRROKzoEEsl2c
+@token_admin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoibm92by5hZG1pbkBleGFtcGxlLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6ImFkbWluaXN0cmFkb3IiLCJleHAiOjE3NTA5NDg4NDV9.hjPNdQn5WOknSVnxEZdEVQHfEebPZUG2vUWtvo4zqfE
 
 
 ###########################################################
@@ -28,7 +29,7 @@ POST {{host}}/api/Usuario/cadastrar
 Content-Type: application/json
 
 {
-  "email": "MOS@example.com",
+  "email": "novo.admin@example.com",
   "senha": "123456",
   "permissao": 1
 }
@@ -47,15 +48,27 @@ POST {{host}}/api/Usuario/login
 Content-Type: application/json
 
 {
-  "email": "MOS@example.com",
+  "email": "novo.admin@example.com",
   "senha": "123456"
 }
 
-### ✅ Listar livros (acesso público)
+### ✅ Listar todos os livros
 GET {{host}}/api/Livros/listar
 
-### ✅ Listar autores (acesso público)
+### ✅ Buscar livro por ID
+# ATENÇÃO: Use um ID de livro existente (ex: 1)
+GET {{host}}/api/Livros/1
+
+### ✅ Buscar livros por autor
+# ATENÇÃO: Use um ID de autor existente (ex: 1)
+GET {{host}}/api/Livros/autor/1
+
+### ✅ Listar todos os autores
 GET {{host}}/api/Autor/listar
+
+### ✅ Buscar autor por ID
+# ATENÇÃO: Use um ID de autor existente (ex: 1)
+GET {{host}}/api/Autor/1
 
 
 ###########################################################
@@ -68,7 +81,37 @@ Authorization: Bearer {{token_admin}}
 
 ###
 
+### 🔒 Cadastrar novo autor (somente ADMIN)
+POST {{host}}/api/Autor
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "nome": "George Orwell",
+  "nacionalidade": "Britânico"
+}
+
+### 🔒 Atualizar autor (somente ADMIN)
+# ATENÇÃO: Use um ID de autor existente no seu DB
+PUT {{host}}/api/Autor/alterar/1
+Authorization: Bearer {{token_admin}}
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nome": "Eric Arthur Blair",
+  "nacionalidade": "Britânico"
+}
+
+### 🔒 Deletar autor (somente ADMIN)
+# ATENÇÃO: Use um ID de autor existente E SEM LIVROS ASSOCIADOS no seu DB
+DELETE {{host}}/api/Autor/deletar/2
+Authorization: Bearer {{token_admin}}
+
+###
+
 ### 🔒 Cadastrar novo livro (somente ADMIN)
+# ATENÇÃO: autorId deve ser um ID de autor existente no seu DB
 POST {{host}}/api/Livros
 Authorization: Bearer {{token_admin}}
 Content-Type: application/json
@@ -76,52 +119,59 @@ Content-Type: application/json
 {
   "titulo": "A Revolução dos Bichos",
   "anoPublicacao": 1945,
-  "autorId": 1
+  "autorId": 1,
+  "capaUrl": "https://m.media-amazon.com/images/I/41D0bB5sUWL._SY445_SX342_QL70_FMwebp_.jpg"
 }
 
-###
-
-### 🔒 Cadastrar autor (somente ADMIN)
-POST {{host}}/api/Autor
+### 🔒 Atualizar livro (somente ADMIN)
+# ATENÇÃO: Use um ID de livro e um ID de autor existentes no seu DB
+PUT {{host}}/api/Livros/1
 Authorization: Bearer {{token_admin}}
 Content-Type: application/json
 
 {
-  "nome": "J.R.R. Tolkien",
-  "nacionalidade": "Sul-Africano"
+  "id": 1,
+  "titulo": "1984 (Edição Revisada)",
+  "anoPublicacao": 1950,
+  "autorId": 1,
+  "capaUrl": "https://m.media-amazon.com/images/I/51p4yV8U+ML._SL500_.jpg"
 }
+
+### 🔒 Deletar livro (somente ADMIN)
+# ATENÇÃO: Use um ID de livro existente E NÃO EMPRESTADO no seu DB
+DELETE {{host}}/api/Livros/2
+Authorization: Bearer {{token_admin}}
 
 ###
 
 ### 🔒 (USUÁRIO) Fazer um empréstimo para si mesmo
 # Esta rota usa o token do usuário logado para definir o UsuarioId.
+# ATENÇÃO: livroId deve ser um ID de livro existente E DISPONÍVEL no seu DB.
 POST {{host}}/api/Emprestimos/emprestar
 Authorization: Bearer {{token_comum}}
 Content-Type: application/json
 
 {
-  "livroId": 6
+  "livroId": 1
 }
-
-###
 
 ### 🔒 (ADMIN) Fazer um empréstimo para qualquer usuário
 # Esta rota permite que um admin defina para qual usuário o livro será emprestado.
+# ATENÇÃO: livroId e usuarioId devem existir E o livro deve estar disponível.
 POST {{host}}/api/Emprestimos/emprestar-como-admin
 Authorization: Bearer {{token_admin}}
 Content-Type: application/json
 
 {
-  "livroId": 5,
-  "usuarioId": 9
+  "livroId": 1,
+  "usuarioId": 15
 }
-
-###
 
 ### 🔒 Devolver livro (qualquer um dos tokens válidos)
 # A lógica no backend verifica se o usuário é o dono do empréstimo ou um admin.
-PUT {{host}}/api/Emprestimos/devolver/14
-Authorization: Bearer {{token_admin}}
+# ATENÇÃO: Use um ID de empréstimo ATIVO (não devolvido) existente no seu DB.
+PUT {{host}}/api/Emprestimos/devolver/1
+Authorization: Bearer {{token_comum}}
 
 ###
 

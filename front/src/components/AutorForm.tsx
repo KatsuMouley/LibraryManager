@@ -15,7 +15,6 @@ export default function AutorForm() {
   const router = useRouter();
   const { id } = router.query;
 
-  // Efeito para pré-preencher o formulário no modo de edição
   useEffect(() => {
     if (id) {
       setLoading(true);
@@ -35,7 +34,6 @@ export default function AutorForm() {
     }
   }, [id]);
 
-  // Função de submissão do formulário
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -51,11 +49,9 @@ export default function AutorForm() {
 
     try {
       if (id) {
-        // Rota de edição (PUT)
         await API.put(`/Autor/alterar/${id}`, payload);
         setSuccess('Autor atualizado com sucesso!');
       } else {
-        // Rota de criação (POST)
         await API.post('/Autor', payload);
         setSuccess('Autor cadastrado com sucesso!');
       }
@@ -70,16 +66,16 @@ export default function AutorForm() {
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">{id ? 'Editar' : 'Novo'} Autor</h1>
+    <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-2xl mt-10">
+      <h1 className="text-3xl font-bold mb-6 text-center text-gray-900">{id ? 'Editar' : 'Novo'} Autor</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {error && <p className="text-red-600 text-center">{error}</p>}
-        {success && <p className="text-green-600 text-center">{success}</p>}
+        {error && <p className="text-red-600 text-center text-sm">{error}</p>}
+        {success && <p className="text-green-600 text-center text-sm">{success}</p>}
 
         <label className="block">
-          <span className="text-gray-700">Nome</span>
+          <span className="text-gray-700 font-medium">Nome</span>
           <input
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring focus:ring-blue-200"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             placeholder="Nome do Autor"
             value={nome}
             onChange={e => setNome(e.target.value)}
@@ -88,9 +84,9 @@ export default function AutorForm() {
         </label>
 
         <label className="block">
-          <span className="text-gray-700">Nacionalidade</span>
+          <span className="text-gray-700 font-medium">Nacionalidade</span>
           <input
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring focus:ring-blue-200"
+            className="mt-1 block w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             placeholder="Nacionalidade"
             value={nacionalidade}
             onChange={e => setNacionalidade(e.target.value)}
@@ -100,7 +96,7 @@ export default function AutorForm() {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full text-white px-4 py-2 rounded-md transition-colors ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'}`}
+          className={`w-full text-white font-bold py-3 rounded-md transition-colors ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'}`}
         >
           {loading ? 'Salvando...' : 'Salvar'}
         </button>

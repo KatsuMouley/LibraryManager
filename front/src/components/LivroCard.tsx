@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 // src/components/LivroCard.tsx
 'use client';
 import { Livro } from '@/types/interfaces';
@@ -6,7 +7,7 @@ import API from '@/services/api';
 import { useRouter } from 'next/router';
 import { getUserIdFromToken } from '@/utils/auth';
 import { isAxiosError } from 'axios';
-import { useState } from 'react'; // <<<<< NOVO: Importe useState
+import { useState } from 'react';
 
 interface Props {
   livro: Livro & { isEmprestado?: boolean };
@@ -25,51 +26,58 @@ export default function LivroCard({ livro, onDelete, userPermissao }: Props) {
   
   const router = useRouter();
 
-  // <<<<<<< NOVO: Estados para as mensagens de feedback >>>>>>>>>
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   
   const handleEmprestar = async () => {
-    // Limpa mensagens antigas ao iniciar a ação
     setSuccessMessage('');
     setErrorMessage('');
 
     const userId = getUserIdFromToken();
     if (!userId) {
       setErrorMessage('Você precisa estar logado para emprestar um livro.');
-      setTimeout(() => router.push('/auth/login'), 2000); // Redireciona após 2s
+      setTimeout(() => router.push('/auth/login'), 2000);
       return;
     }
-    
+
     if (window.confirm(`Tem certeza que deseja emprestar o livro "${livro.titulo}"?`)) {
       try {
         const payload = { livroId: livro.id };
-        
+
         await API.post('/Emprestimos/emprestar', payload);
-        
-        // <<<<<<< SUCESSO: Define a mensagem de sucesso >>>>>>>>>
+
         setSuccessMessage(`Livro "${livro.titulo}" emprestado com sucesso!`);
-        
-        // Redireciona após exibir a mensagem de sucesso por 2 segundos
         setTimeout(() => router.push('/Emprestimos/meus-livros'), 2000);
       } catch (error) {
-        // <<<<<<< ERRO: Extrai a mensagem de erro e a exibe >>>>>>>>>
         console.error('Erro na requisição de empréstimo:', error);
         if (isAxiosError(error) && error.response) {
           const rawData = error.response.data;
           let friendlyMessage = 'Erro desconhecido.';
+
           if (typeof rawData === 'string') {
             if (rawData.includes('Usuário atingiu o limite')) {
               friendlyMessage = 'Limite de empréstimos atingido.';
             } else if (rawData.includes('Livro já está emprestado')) {
               friendlyMessage = 'Livro já está emprestado.';
             } else {
-              friendlyMessage = rawData;
+              friendlyMessage = rawData; // Atribui a mensagem bruta se não for uma das conhecidas
             }
           } else if (rawData?.message) {
             friendlyMessage = rawData.message;
           }
-          setErrorMessage(friendlyMessage);
+
+          // --- AQUI É ONDE A CORREÇÃO ENTRA ---
+          const statusCode = error.response.status; // Obtenha o status diretamente da resposta do Axios
+
+          if (statusCode === 403) {
+            setErrorMessage(`Acesso negado (403): ${friendlyMessage}`);
+          } else if (statusCode === 400) {
+            setErrorMessage(`Requisição inválida (400): ${friendlyMessage}`);
+          } else if (statusCode >= 500) { // Usar >= 500 para cobrir todos os erros de servidor
+            setErrorMessage(`Erro interno do servidor (${statusCode}): ${friendlyMessage}. Por favor, contate o suporte.`);
+          } else {
+            setErrorMessage(`Ocorreu um erro: ${friendlyMessage}`);
+          }
         } else {
           setErrorMessage('Ocorreu um erro de rede. Verifique sua conexão.');
         }
@@ -78,39 +86,46 @@ export default function LivroCard({ livro, onDelete, userPermissao }: Props) {
   };
 
   return (
-    <div className="border p-4 rounded bg-gray-100 flex justify-between items-center shadow-sm">
-      <div>
-        <h2 className="font-bold text-lg">{livro.titulo}</h2>
-        <p className="text-gray-600">Ano: {livro.anoPublicacao}</p>
+    <div className="border p-4 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-white flex flex-col justify-between h-48 sm:h-auto overflow-hidden">
+      <div className="flex items-center gap-4 mb-4">
+        <img 
+          src={livro.capaUrl || `https://placehold.co/100x150/f0f0f0/666666?text=Sem+Capa`} 
+          alt={`Capa do livro ${livro.titulo}`} 
+          className="w-20 h-24 object-cover rounded-md shadow-md"
+        />
+        <div>
+          <h2 className="font-bold text-xl text-gray-900">{livro.titulo}</h2>
+          <p className="text-gray-600">Ano: {livro.anoPublicacao}</p>
+        </div>
       </div>
+
+      <div className="mb-2">
+        {successMessage && <p className="text-green-600 font-bold text-sm">{successMessage}</p>}
+        {errorMessage && <p className="text-red-600 font-bold text-sm">{errorMessage}</p>}
+      </div>
+
       <div className="flex flex-col sm:flex-row gap-2">
-        {/* NOVO: Exibe as mensagens de feedback */}
-        {successMessage && <p className="text-green-600 font-bold">{successMessage}</p>}
-        {errorMessage && <p className="text-red-600 font-bold">{errorMessage}</p>}
-        
         {isGerente ? (
-          // Cenário: Admin ou Bibliotecário
           <>
-            <Link href={`/admin/livros/${livro.id}`} className="text-yellow-600 hover:underline">
+            <Link href={`/admin/livros/${livro.id}`} className="text-yellow-600 font-semibold hover:underline">
               Editar
             </Link>
             {onDelete && (
-              <button onClick={() => onDelete(livro.id)} className="text-red-600 hover:underline">
+              <button onClick={() => onDelete(livro.id)} className="text-red-600 font-semibold hover:underline">
                 Excluir
               </button>
             )}
           </>
         ) : isUsuarioComum ? (
-          // Cenário: Usuário Comum
           <>
-            <Link href={`/livros/${livro.id}`} className="text-blue-600 hover:underline">
+            <Link href={`/livros/${livro.id}`} className="text-blue-600 font-semibold hover:underline">
               Ver Detalhes
             </Link>
             <button 
               onClick={handleEmprestar} 
               disabled={livro.isEmprestado}
               className={`
-                transition 
+                font-semibold transition 
                 ${livro.isEmprestado ? 'text-gray-500 cursor-not-allowed' : 'text-green-600 hover:underline'}
               `}
             >
@@ -118,8 +133,7 @@ export default function LivroCard({ livro, onDelete, userPermissao }: Props) {
             </button>
           </>
         ) : (
-          // Cenário: Não Logado
-          <Link href={`/livros/${livro.id}`} className="text-blue-600 hover:underline">
+          <Link href={`/livros/${livro.id}`} className="text-blue-600 font-semibold hover:underline">
             Ver Detalhes
           </Link>
         )}
