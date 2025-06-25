@@ -19,10 +19,13 @@ export interface Usuario {
 
 export interface Emprestimo {
   id: number;
-  livroid: number;
-  usuarioid: number;
+  // <<<<<<< CORRIGIDO: camelCase para corresponder ao payload da API >>>>>>>>>
+  livroId: number;
+  usuarioId: number;
   dataEmprestimo: string;
+  // CORRIGIDO: O nome da propriedade é 'dataDevolucao'
+  dataDevolucao: string | null;
   dataDevolucaoPrevista: string;
-  dataDevolucaoReal?: string;
+  // Adicione a propriedade 'status' que também aparece no JSON da API
+  status?: string;
 }
-

@@ -11,5 +11,6 @@ namespace Biblioteca.Data
         bool LivroEstaEmprestado(int livroId);
         int ContarEmprestimosAtivos(int usuarioId);
         void Atualizar(Emprestimo emprestimo);
+        IEnumerable<Emprestimo> ListarPorUsuario(int usuarioId);
     }
 }

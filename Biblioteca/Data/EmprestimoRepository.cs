@@ -75,5 +75,13 @@ namespace Biblioteca.Data
             _context.Emprestimos.Update(emprestimo);
             _context.SaveChanges();
         }
+
+        public IEnumerable<Emprestimo> ListarPorUsuario(int usuarioId)
+        {
+            // O _context é o seu DbContext do Entity Framework
+            return _context.Emprestimos
+                            .Where(e => e.UsuarioId == usuarioId)
+                            .ToList();
+        }
     }
 }

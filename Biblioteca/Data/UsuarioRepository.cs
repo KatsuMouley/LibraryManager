@@ -1,3 +1,5 @@
+// CONTEÚDO CORRETO PARA UsuarioRepository.cs
+
 using Biblioteca.Modelos;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +24,7 @@ namespace Biblioteca.Data
         public void Cadastrar(Usuario usuario)
         {
             _context.Usuarios.Add(usuario);
-            _context.SaveChanges(); // Síncrono
+            _context.SaveChanges();
         }
 
         public List<Usuario> Listar()
@@ -48,7 +50,7 @@ namespace Biblioteca.Data
         public void Atualizar(Usuario usuario)
         {
             _context.Usuarios.Update(usuario);
-            _context.SaveChanges(); // Síncrono
+            _context.SaveChanges();
         }
     }
 }

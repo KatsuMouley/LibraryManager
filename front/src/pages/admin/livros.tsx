@@ -98,9 +98,14 @@ export default function GerenciarLivros() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Gerenciar Livros</h1>
-        <Link href="/admin/livros/novo" className="bg-green-600 text-white px-4 py-2 rounded shadow-md hover:bg-green-700 transition">
-          + Novo Livro
-        </Link>
+         <div className='justify-between'> {/* <<<< NOVO: Envolve os botões em um div */}
+          <Link href="/admin/livros/novo" className="bg-green-600 text-white px-4 py-2 rounded shadow-md hover:bg-green-700 transition mr-4">
+            + Novo Livro
+          </Link>
+          <Link href="/admin/autores" className="bg-blue-600 text-white px-4 py-2 rounded shadow-md hover:bg-blue-700 transition">
+            Gerenciar Autores
+          </Link>
+        </div> {/* <<<< FIM DO NOVO DIV */}
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
