@@ -49,7 +49,7 @@ export default function LoginPage() {
         </button>
       </form>
       <p className="mt-4">
-        Ainda não tem conta? <a href="/auth/cadastro" className="text-blue-600 underline">Cadastre-se</a>
+        Ainda não tem conta? <a href="/auth/register" className="text-blue-600 underline">Cadastre-se</a>
       </p>
     </div>
   );

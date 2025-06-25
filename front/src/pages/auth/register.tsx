@@ -84,9 +84,8 @@ const handleSubmit = async (e: React.FormEvent) => {
                         value={permissao}
                         onChange={e => setPermissao(Number(e.target.value))}
                     >
-                        <option value={1}>Usuário</option>
-                        <option value={2}>Bibliotecário</option>
-                        <option value={3}>Administrador</option>
+                        <option value={0}>Usuário</option>
+                        <option value={1}>Administrador</option>
                     </select>
                 </label>
 

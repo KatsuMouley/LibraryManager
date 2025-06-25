@@ -48,20 +48,22 @@ namespace Biblioteca.Controllers
             });
         }
 
-
-        [Authorize(Roles = "administrador")]
-        [HttpGet("listar")]
-        public IActionResult Listar()
-        {
-            return Ok(_usuarioRepository.Listar());
-        }
+        // Seu arquivo C# do backend (provavelmente em um Controller ou Serviço)
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public string GerarToken(Usuario usuario)
         {
+            // CUIDADO: usuario.Id é um int, precisa ser convertido para string para a Claim.
+            // Também estamos usando o tipo de Claim correto para o ID.
             var claims = new[]
             {
+                // Esta claim adiciona o email (o nome de usuário)
                 new Claim(ClaimTypes.Name, usuario.Email),
+                
+                // Esta claim adiciona o ID do usuário, usando o tipo correto 'NameIdentifier'
+                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+                
+                // Esta claim adiciona a permissão
                 new Claim(ClaimTypes.Role, usuario.Permissao.ToString())
             };
 
